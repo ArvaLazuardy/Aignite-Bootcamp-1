@@ -54,7 +54,7 @@ function App() {
     )    
   }
   
-nanti pake {divarray}
+kl diatas nanti pake {divarray}
 */
 
   return (
