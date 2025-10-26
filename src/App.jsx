@@ -26,37 +26,6 @@ function App() {
     },
   ]
 
-
-/*  
-  const divArray = [];
-  
-  for (let i = 0; i < task.length; i++ ) 
-    {
-    let currentTask = task[i]
-    divArray.push(
-      <div className='bg-gray-700 p-4 rounded-2xl shadow-2xl'>
-        <span className='font-semibold text-2xl '>
-        {currentTask.title}
-        </span>
-        <br/>
-        <br/>
-        <span className='text-base'>
-          {currentTask.description} 
-          <br/>
-          {currentTask.date} 
-          <br/>
-          {currentTask.time} 
-          <br/>
-          {currentTask.status} 
-          <br/>
-        </span>
-      </div>
-    )    
-  }
-  
-kl diatas nanti pake {divarray}
-*/
-
   return (
     <div className='flex justify-center w-full min-h-screen bg-gray-800 text-white'>
       <header className='absolute top-0 text-xl p-5 bg-gray-600 w-full text-center rounded-lg'>
