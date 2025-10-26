@@ -2,27 +2,27 @@
 function App() {
   const task = [
     {
-    title: 'fafafafa',
-    description: 'aaa',
+    title: 'Calculus Class',
+    description: 'class at room ----',
     date: 'date',
     time: 'staet',
-    status: 'alllll',
-    },
-
-    {
-    title: 'ufuufeee',
-    description: 'aadadada',
-    date: 'adwadada',
-    time: 'satatas',
-    status: 'adadada',
+    status: 'active',
     },
     
     {
-    title: 'hehe',
-    description: 'aa',
-    date: 'adwadada',
-    time: 'satatas',
-    status: 'adadada',
+    title: 'DSD Class',
+    description: 'class at room ----',
+    date: 'date',
+    time: 'time',
+    status: 'active',
+    },
+    
+    {
+    title: 'OAK Class',
+    description: 'class at room ----',
+    date: 'date',
+    time: 'time',
+    status: 'active',
     },
   ]
 
