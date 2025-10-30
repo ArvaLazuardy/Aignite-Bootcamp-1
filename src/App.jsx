@@ -1,11 +1,16 @@
+import { useState } from 'react';
+/*import enter from './enter.svg'*/
+import './App.css';
 
 function App() {
-  const task = [
+  
+  {/*Class Data*/}
+  const [task, setTasks] = useState([
     {
     title: 'Calculus Class',
     description: 'class at room ----',
     date: 'date',
-    time: 'staet',
+    time: 'time',
     status: 'active',
     },
     
@@ -24,7 +29,37 @@ function App() {
     time: 'time',
     status: 'active',
     },
-  ]
+  ])
+  
+  const [newTask, setNewTask] = useState("")
+
+  const handleInputChange = (e) => setNewTask(e.target.value);
+
+  {/*Add Task*/}
+  function handleADDTask(){
+    const now = new Date();
+    const taskToAdd = {
+      title: newTask,
+      date: now.toLocalDateString(), 
+      time: now.toLocalTimeString(),
+      status: 'Active',
+      completed: false,
+    }
+    setTasks([...task, taskToAdd])
+    setNewTask(" ");
+  }
+
+  {/*Complete Task*/}
+  function handleToggleCompleted(Index){
+    const updatedTask = task.map((task, i) => i === Index ? {...task, completed: !task.completed } : task );
+    setTasks(updatedTask);
+  }
+
+  {/*Remove Task*/}
+  function handleRemoveTask(index){
+    const updatedTask = task.filter((_, i) => i !== index);
+    setTasks(updatedTask);
+  }
 
   return (
     <div className='flex justify-center w-full min-h-screen bg-gray-800 text-white'>
@@ -35,13 +70,22 @@ function App() {
         
         {/* User Prompt*/}
         <div className='flex justify-center'>
-          <input className='bg-slate-700 p-4 rounded-2xl w-3/4 shadow-md' placeholder='Type Your Input'>
+          <input 
+            className='bg-slate-700 p-4 rounded-2xl w-3/4 shadow-md' 
+            placeholder='Type Your Input'
+            value={newTask}
+            onChange={handleInputChange}
+            >
           </input>
+
           <button className='pl-2 h-12 pt-2'>
-            <img src='/logo192.png' alt="enter" className='w-full h-full'/>
+            <img src='/logo192.png' alt="enter" 
+            className='w-full h-full'
+            onClick={handleADDTask}
+            />
           </button>
         </div>
-
+        
         {/*spacing*/}
         <div className="p-6"/>
 
@@ -62,15 +106,26 @@ function App() {
                 <br/>
                 <br/>
                 <span className='text-base'>
-                  {currentTask.description} 
+                  Description: {currentTask.description} 
                   <br/>
-                  {currentTask.date} 
+                  Date: {currentTask.date} 
                   <br/>
-                  {currentTask.time} 
+                  Time: {currentTask.time} 
                   <br/>
-                  {currentTask.status} 
+                  Status: {currentTask.status} 
                   <br/>
                 </span>
+                
+                <input type="checkbox"
+                checked = {task.completed}
+                onChange={() => handleToggleCompleted(index)}
+                />
+                
+                <button
+                  className='ml-4 bg-red-600 px-4 py-2 rounded-xl hover:bg-red-700'
+                  onClick={() => handleRemoveTask(index)}
+                >
+                </button>
               </div>
             ) )} 
             
