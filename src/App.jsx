@@ -41,12 +41,14 @@ function App() {
   const [newTask, setNewTask] = useState("")
   const [newDescription, setNewDescription] = useState("");
 
-  const handleInputChange = (e) => setNewTask(e.target.value);
+  const handleInput1Change = (e) => setNewTask(e.target.value);
   const handleInput2Change = (e) => setNewDescription(e.target.value);
 
 
   {/*Add Task*/}
   function handleADDTask(){
+    if (!newTask.trim()) return; // prevent adding empty task
+    if (!newDescription.trim()) return; // prevent adding empty description
     const now = new Date();
     const taskToAdd = {
       id: crypto.randomUUID(),
@@ -58,7 +60,6 @@ function App() {
       completed: false,
     }
     setTasks(prev => [taskToAdd, ...prev]);
-    //setTasks([...task, taskToAdd])  --- old method ---
     setNewTask("");
     setNewDescription("");
   }
@@ -106,7 +107,7 @@ function App() {
   setNewTask("");
   setNewDescription("");
 }*/
-
+  
   //Complete Task
   function handleToggleCompleted(id){
     const updatedTask = task.map((task, i) => task.id === id ? {...task, completed: !task.completed } : task );
@@ -120,11 +121,16 @@ function App() {
   }
 
   return (
-    <div className='flex justify-center w-full min-h-screen bg-gray-800 text-white'>
-      <header className='absolute top-0 text-xl p-5 bg-gray-700/60 w-full text-center rounded-lg'>
+    <div className=' bg-gray-800 text-white flex justify-center p-10'>
+
+      {/*Container Box*/}
+      <div className="w-full max-w-4xl bg-gray-900 border border-gray-700 rounded-2xl p-4 shadow-2xl">
+      
+      {/*Header*/}
+      <header className='text-center text-2xl font-bold bg-gray-700/60 rounded-2xl p-2'>
         To-Do List App
       </header>  
-      <main className='pt-36 w-3/4'>
+      <main className='pt-12 w-(85%)'>
         
         {/* User Prompt*/}
         <div className='flex justify-center'>
@@ -135,7 +141,7 @@ function App() {
               className='bg-slate-700 p-4 rounded-2xl w-full shadow-md' 
               placeholder='Type Your Input' 
               value={newTask}
-              onChange={handleInputChange}
+              onChange={handleInput1Change}
               >
             </input>
 
@@ -195,7 +201,6 @@ function App() {
                 <div className="flex gap-2 absolute top-2 right-2">  
                   <button type="button" 
                     aria-pressed={currentTask.completed} 
-                    //checked={currentTask.completed} 
                     className='bg-gray-600 px-3 py-1 rounded-xl hover:bg-gray-800/80 active:bg-gray-900 aria-pressed:bg-green-900 text-sm text-white'
                     onClick={() => handleToggleCompleted(currentTask.id)}
                     > 
@@ -203,20 +208,23 @@ function App() {
                   </button>
 
                   <button
-                    //aria-label={`Remove ${currentTask.title}`}
                     className='bg-red-600 px-3 py-1 rounded-xl hover:bg-red-700 active:bg-red-800 text-sm text-white'
                     onClick={() => handleRemoveTask(currentTask.id)}
                   >
                     X 
                   </button> 
                 </div>
-                
               </div>
             ) )} 
             
           </div>
         </div>
-      </main>
+        <br/>
+        <br/>
+        <div className='text-center text-sm text-gray-500'>
+        To-Do-List
+        </div>
+      </main></div>
     </div>
   )
 }
