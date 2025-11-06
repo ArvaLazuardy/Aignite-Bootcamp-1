@@ -6,7 +6,6 @@ function App() {
   
   {/*Class Data*/}
   const [task, setTasks] = useState([
-  //const task = [
     {
     title: 'Calculus Class',
     description: 'class at room ----',
@@ -48,7 +47,6 @@ function App() {
   {/*Add Task*/}
   function handleADDTask(){
     if (!newTask.trim()) return; // prevent adding empty task
-    if (!newDescription.trim()) return; // prevent adding empty description
     const now = new Date();
     const taskToAdd = {
       id: crypto.randomUUID(),
@@ -107,7 +105,7 @@ function App() {
   setNewTask("");
   setNewDescription("");
 }*/
-  
+
   //Complete Task
   function handleToggleCompleted(id){
     const updatedTask = task.map((task, i) => task.id === id ? {...task, completed: !task.completed } : task );
@@ -121,7 +119,7 @@ function App() {
   }
 
   return (
-    <div className=' bg-gray-800 text-white flex justify-center p-10'>
+    <div className='min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-800/90 text-white flex justify-center p-10'>
 
       {/*Container Box*/}
       <div className="w-full max-w-4xl bg-gray-900 border border-gray-700 rounded-2xl p-4 shadow-2xl">
@@ -201,6 +199,7 @@ function App() {
                 <div className="flex gap-2 absolute top-2 right-2">  
                   <button type="button" 
                     aria-pressed={currentTask.completed} 
+                    //checked={currentTask.completed} 
                     className='bg-gray-600 px-3 py-1 rounded-xl hover:bg-gray-800/80 active:bg-gray-900 aria-pressed:bg-green-900 text-sm text-white'
                     onClick={() => handleToggleCompleted(currentTask.id)}
                     > 
@@ -213,19 +212,20 @@ function App() {
                   >
                     X 
                   </button> 
-                </div>
+                </div> 
               </div>
             ) )} 
             
+            {/*small footer*/}
+            <div className='text-center text-sm text-gray-500'>
+            To-Do-List
+            </div>
           </div>
         </div>
         <br/>
         <br/>
-        <div className='text-center text-sm text-gray-500'>
-        To-Do-List
-        </div>
       </main></div>
-    </div>
+    </div> 
   )
 }
 
