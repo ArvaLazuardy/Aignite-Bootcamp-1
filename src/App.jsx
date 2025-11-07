@@ -1,5 +1,4 @@
 import { useState } from 'react';
-/*import enter from './enter.svg'*/
 import './App.css';
 
 function App() {
@@ -37,74 +36,84 @@ function App() {
     },
   ])
   
+
+  const extractTime = (text) => {
+  const patterns = [
+    /(\d{1,2}):(\d{2})\s*(AM|PM)/i,
+    /(\d{1,2}):(\d{2})/,
+    /(\d{1,2})\s*(AM|PM)/i,
+  ];
+  for (const p of patterns) {
+    const m = text.match(p);
+    if (!m) continue;
+    let h = parseInt(m[1], 10);
+    const mins = m[2] ? parseInt(m[2], 10) : 0;
+    const period = m[3];
+
+    if (period && period.toUpperCase() === 'PM' && h !== 12) h += 12;
+    if (period && period.toUpperCase() === 'AM' && h === 12) h = 0;
+
+    const HH = String(h).padStart(2, '0');
+    const MM = String(mins).padStart(2, '0');
+    return `${HH}:${MM}`;
+  }
+  return '';
+};
+
+  
   const [newTask, setNewTask] = useState("")
   const [newDescription, setNewDescription] = useState("");
 
   const handleInput1Change = (e) => setNewTask(e.target.value);
   const handleInput2Change = (e) => setNewDescription(e.target.value);
 
+  {/*format date to DD-MM-YYYY*/}
+  function formatDateDDMMYYYY(iso) {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-");
+  return `${d}-${m}-${y}`;
+}
 
-  {/*Add Task*/}
-  function handleADDTask(){
-    if (!newTask.trim()) return; // prevent adding empty task
-    const now = new Date();
-    const taskToAdd = {
-      id: crypto.randomUUID(),
-      title: newTask,
-      description: newDescription,
-      date: now.toLocaleDateString(), 
-      time: now.toLocaleTimeString(),
-      status: 'active',
-      completed: false,
-    }
-    setTasks(prev => [taskToAdd, ...prev]);
-    setNewTask("");
-    setNewDescription("");
-  }
-
-
-
-  {/*Add Task using AI Parsing*/}  
-/*async function handleADDTask() {
+  
+async function handleADDTask() {
   if (!newTask.trim()) return;
 
-  const now = new Date();
-  const todayISO = now.toISOString().slice(0,10);
-  const todayLabel = now.toLocaleDateString("en-US", { weekday: "long" });
-
+//call local AI proxy
   let parsed = null;
+  try {
+    const resp = await fetch('http://localhost:3001/api/parseTask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input: newTask.trim() }),
+    });
 
-  // Call your server (note: FULL URL, not relative)
-  const resp = await fetch("http://localhost:3001/api/parseTask", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      input: newTask.trim(),
-      todayISO,
-      todayLabel,
-    }),
-  });
-
-  // Read body as text then parse if present (prevents "Unexpected end of JSON input")
-  const raw = await resp.text();
-  if (resp.ok && raw) {
-    try { parsed = JSON.parse(raw); } catch { parsed = null; }
+    const raw = await resp.text();    
+    if (resp.ok && raw) parsed = JSON.parse(raw);
+  } catch (e) {
+    console.warn('AI call failed, falling back:', e);
   }
+
+  const now = new Date();
+  const todayISO = now.toISOString().slice(0, 10);
+  const isoDate = parsed?.date ?? todayISO;
 
   const taskToAdd = {
     id: crypto.randomUUID(),
     title: parsed?.task ?? newTask.trim(),
-    description: newDescription.trim(), 
-    date: parsed?.date ?? todayISO,                 // keep ISO for easy sort
-    time: parsed?.time ?? now.toLocaleTimeString(),                       // empty if not provided
-    status: "active",
+    description: newDescription.trim(),
+    date: formatDateDDMMYYYY(isoDate) ?? todayISO,                      
+    time:
+      (parsed?.time ?? '').trim() ||
+      extractTime(newTask) ||
+      'all day',                                              
+    status: 'active',
     completed: false,
   };
 
-  setTasks(prev => [taskToAdd, ...prev]);
-  setNewTask("");
-  setNewDescription("");
-}*/
+  setTasks((prev) => [taskToAdd, ...prev]);
+  setNewTask('');
+  setNewDescription('');
+}
 
   //Complete Task
   function handleToggleCompleted(id){
@@ -199,7 +208,6 @@ function App() {
                 <div className="flex gap-2 absolute top-2 right-2">  
                   <button type="button" 
                     aria-pressed={currentTask.completed} 
-                    //checked={currentTask.completed} 
                     className='bg-gray-600 px-3 py-1 rounded-xl hover:bg-gray-800/80 active:bg-gray-900 aria-pressed:bg-green-900 text-sm text-white'
                     onClick={() => handleToggleCompleted(currentTask.id)}
                     > 
@@ -215,15 +223,15 @@ function App() {
                 </div> 
               </div>
             ) )} 
-            
+        
+        <br/>
+        <br/>           
             {/*small footer*/}
             <div className='text-center text-sm text-gray-500'>
             To-Do-List
             </div>
           </div>
         </div>
-        <br/>
-        <br/>
       </main></div>
     </div> 
   )
